@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const signupForm = document.getElementById("signupForm");
     
-    signupForm.addEventListener("submit", (event) => {
+    signupForm.addEventListener("submit", async (event) => {
         event.preventDefault();
 
         const username = document.getElementById("username").value.trim();
@@ -10,18 +10,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let users = JSON.parse(localStorage.getItem("users")) || {};
 
-        if (users[username]) {
-            alert("User already exists. Please sign in or select a different username.");
+        if (password !== reenterPassword) {
+            alert("Passwords do not match.");
             return;
         }
 
-        if (password !== reenterPassword) {
-            alert("Passwords do not match.");
-        } else {
-            users[username] = {password: password};
-            localStorage.setItem("users", JSON.stringify(users));
-            alert("Account successfully created. You can now sign into your account.");
-            window.location.href = "login.html";
+        //generate a randome public key (placeholder for now)
+        const dummyPublicKey = btoa("publicKeyPlaceholder");
+
+        try {
+            const response = await fetch("https://networks-project-server.onrender.com/signup", {
+                method: "POST", 
+                headers: {"Content-Type": "application/json" },
+                body: JSON.stringify({ username, password, publicKey: dummyPublicKey})
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                alert("Account created successfully. You can now log in.");
+                window.location.href = "login.html";
+            } else {
+                alert(result.message || "Signup failed.");
+            }
+        } catch (error) {
+            console.error("Signup error:", error);
+            alert("Could not connect o server.");
         }
     });
 });
