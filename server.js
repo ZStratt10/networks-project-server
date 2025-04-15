@@ -10,7 +10,7 @@ const io = new Server(server);
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "public"));
+    res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 let onlineUsers = {};
@@ -37,12 +37,12 @@ io.on("connection", (socket) => {
 
     socket.on("disconnect", () => {
         delete onlineUsers[socket.id];
-        io.emit("updateUserList", Object.values(onlineUsers));
+        io.emit("updatedUserList", Object.values(onlineUsers));
         console.log("User disconnected:", socket.id);
     });
 });
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`✅ Server running on http://localhost:${PORT}`);
 });
