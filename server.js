@@ -6,7 +6,7 @@ const path = require("path");
 const bcrypt = require("bcryptjs");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const mongodb = require("mongodb");
+const mongoose = require("mongoose");
 
 const app = express();
 const server = http.createServer(app);
@@ -16,17 +16,17 @@ const io = new Server(server);
 const MONGO_URI = process.env.MONGO_URI;
 
 // Connect to MongoDB
-mongodb.connect(MONGO_URI)
+mongoose.connect(MONGO_URI)
   .then(() => console.log("Connected to MongoDB"))
   .catch(err => console.error("MongoDB connection error:", err));
 
 // Define User schema
-const userSchema = new mongodb.Schema({
+const userSchema = new mongoose.Schema({
     username: { type: String, unique: true, required: true },
     hashed_password: { type: String, required: true },
     public_key: { type: String, required: true }
 });
-const User = mongodb.model("User", userSchema);
+const User = mongoose.model("User", userSchema);
 
 //enable CORS and JSON body parsing
 app.use(cors());
