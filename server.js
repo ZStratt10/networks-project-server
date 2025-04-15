@@ -30,6 +30,7 @@ const User = mongoose.model("User", userSchema);
 
 //enable CORS and JSON body parsing
 app.use(cors());
+app.use(express.json());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 

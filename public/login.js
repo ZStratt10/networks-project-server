@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const response = await fetch("https://networks-project-server.onrender.com/login", {
                 method: "POST",
-                headers: { "Conetent-Type": "application/json" },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, password })
             });
             const result = await response.json();
