@@ -7,7 +7,42 @@ body {
     background-color: #f5f5f5;
 }
 
-.chatContainer {
+.app-container {
+    display: flex;
+    height: 100vh;
+}
+
+#userList {
+    width: 250px;
+    background: #2d2d2d;
+    color: white;
+    padding: 1rem;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+#userList h2 {
+    margin-top: 0;
+}
+
+#users {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#users li {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #444;
+}
+
+#users li:hover,
+#users li:active {
+    background: #444;
+}
+
+.chat-container {
     max-width: 1250px;
     background: white;
     padding: 15px;
@@ -16,7 +51,7 @@ body {
     position: relative;
 }
 
-.logoutContainer {
+.logout-container {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -73,7 +108,7 @@ header {
     border-radius: 5px;
 }
 
-.inputContainer {
+.input-container {
     display: flex;
 }
 
