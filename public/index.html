@@ -7,15 +7,21 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="chat-container">
-        <div class="logout-container">
-            <button id="logoutButton">Logout</button>
-        </div>
-        <header>Networks Messaging App</header>
-        <div class="messages" id="messages"></div>
-        <div class="input-container">
-            <input type="text" id="messageInput" placeholder="Type a message...">
-            <button id="sendButton">Send</button>
+    <div class="app-container">
+        <aside id="userList">
+            <h2>Active Users</h2>
+            <ul id="users"></ul>
+        </aside>
+        <div class="chat-container">
+            <div class="logout-container">
+                <button id="logoutButton">Logout</button>
+            </div>
+            <header>Networks Messaging App</header>
+            <div class="messages" id="messages"></div>
+            <div class="input-container">
+                <input type="text" id="messageInput" placeholder="Type a message...">
+                <button id="sendButton">Send</button>
+            </div>
         </div>
     </div>
     <script src="/socket.io/socket.io.js"></script>

@@ -10,17 +10,18 @@ const mongoose = require("mongoose");
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+    cors: {
+        origin: "*",
+    },
+});
 
-// Use environment variable for MongoDB URI
 const MONGO_URI = process.env.MONGO_URI;
 
-// Connect to MongoDB
 mongoose.connect(MONGO_URI)
   .then(() => console.log("Connected to MongoDB"))
   .catch(err => console.error("MongoDB connection error:", err));
 
-// Define User schema
 const userSchema = new mongoose.Schema({
     username: { type: String, unique: true, required: true },
     hashed_password: { type: String, required: true },
@@ -28,19 +29,23 @@ const userSchema = new mongoose.Schema({
 });
 const User = mongoose.model("User", userSchema);
 
-//enable CORS and JSON body parsing
+const messageSchema = new mongoose.Schema({
+    fromUsername: String,
+    toUsername: String,
+    message: String,
+    timestamp: { type: String, required: true }
+});
+const Message = mongoose.model("Message", messageSchema);
+
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-//route for main page
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-//signup route
-//registers a new user with hashed pw and public key
 app.post("/signup", async (req, res) => {
     const { username, password, publicKey } = req.body;
     if (!username || !password || !publicKey) {
@@ -62,8 +67,6 @@ app.post("/signup", async (req, res) => {
     }
 });
 
-//login route
-//autheticates a user and returns their public key
 app.post("/login", async (req, res) => {
     const { username, password } = req.body;
     if (!username || !password) {
@@ -86,33 +89,32 @@ app.post("/login", async (req, res) => {
     }
 });
 
-//store currently online users
 let onlineUsers = {};
 
-//handle WebSocket conections
 io.on("connection", (socket) => {
     console.log("User connected:", socket.id);
 
-    //maps socket to username
     socket.on("join", (username) => {
         onlineUsers[socket.id] = username;
+        socket.username = username;
         io.emit("updatedUserList", Object.values(onlineUsers));
     });
 
-    //send message to a user
-    socket.on("privateMessage", ({ toUsername, fromUsername, message }) => {
+    socket.on("privateMessage", async ({ toUsername, fromUsername, message }) => {
+        await Message.create({ fromUsername, toUsername, message });
+
         const recipientSocketId = Object.keys(onlineUsers).find(
             key => onlineUsers[key] === toUsername
         );
         if (recipientSocketId) {
             io.to(recipientSocketId).emit("privateMessage", {
                 fromUsername,
+                toUsername,
                 message
             });
         }
     });
 
-    //handle disconnection
     socket.on("disconnect", () => {
         delete onlineUsers[socket.id];
         io.emit("updatedUserList", Object.values(onlineUsers));
@@ -120,7 +122,6 @@ io.on("connection", (socket) => {
     });
 });
 
-//starts the HTTP server
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on http://localhost:${PORT}`);
