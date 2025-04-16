@@ -10,6 +10,7 @@ body {
 .app-container {
     display: flex;
     height: 100vh;
+    width: 100vw;
 }
 
 #userList {
@@ -20,6 +21,7 @@ body {
     padding: 1rem;
     box-sizing: border-box;
     overflow-y: auto;
+    border-radius: 8px;
 }
 
 #userList h2 {
@@ -51,12 +53,14 @@ body {
 }
 
 .chat-container {
-    max-width: 1250px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     background: white;
     padding: 15px;
-    border-radius: 0;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     position: relative;
+    border-radius: 8px;
 }
 
 .logout-container {
@@ -102,11 +106,7 @@ header {
 }
 
 .messages {
-    height: 50vh;
-    max-height: 1000px;
-    min-height: 200px;
-    width: 50vw;
-    overflow-x: auto;
+    flex: 1;
     overflow-y: auto;
     word-wrap: break-word;
     border: 1px solid #ddd;
@@ -114,10 +114,12 @@ header {
     margin-bottom: 10px;
     background-color: white;
     border-radius: 5px;
+    margin-bottom: 10px;
 }
 
 .input-container {
     display: flex;
+    align-items: center;
 }
 
 input {
