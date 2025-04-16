@@ -24,6 +24,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     currentRecipient = user;
                     clearMessages();
                     socket.emit("loadConversation", { withUser: user });
+
+                    const allUsers = document.querySelectorAll("#users li");
+                    allUsers.forEach(li => li.classList.remove("selected"));
+                    userItem.classList.add("selected");
                 })
                 userListElement.appendChild(userItem);
             }

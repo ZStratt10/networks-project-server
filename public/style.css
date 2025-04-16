@@ -13,7 +13,8 @@ body {
 }
 
 #userList {
-    width: 250px;
+    width: 15vw;
+    height: 100vh;
     background: #2d2d2d;
     color: white;
     padding: 1rem;
@@ -35,6 +36,13 @@ body {
     padding: 10px;
     cursor: pointer;
     border-bottom: 1px solid #444;
+    transition: background-color 0.2s ease;
+}
+
+#users li.selected {
+    background: #007bff;
+    font-weight: bold;
+    border-radius: 5px;
 }
 
 #users li:hover,
@@ -46,7 +54,7 @@ body {
     max-width: 1250px;
     background: white;
     padding: 15px;
-    border-radius: 8px;
+    border-radius: 0;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     position: relative;
 }
