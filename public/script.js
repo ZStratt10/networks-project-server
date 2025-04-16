@@ -19,13 +19,13 @@ document.addEventListener("DOMContentLoaded", () => {
         users.forEach(user => {
             if (user !== username) {
                 const userItem = document.createElement("li");
-                userItem.textContext = user;
+                userItem.textContent = user;
                 userItem.addEventListener("click", () => {
                     currentRecipient = user;
                     clearMessages();
                     socket.emit("loadConversation", { withUser: user });
                 })
-                userListElement.appendChild(option);
+                userListElement.appendChild(userItem);
             }
         });
     });

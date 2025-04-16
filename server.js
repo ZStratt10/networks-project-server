@@ -100,8 +100,30 @@ io.on("connection", (socket) => {
         io.emit("updatedUserList", Object.values(onlineUsers));
     });
 
+    socket.on("loadConversation", async ({ withUser }) => {
+        const currentUser = socket.username;
+        if (!currentUser || !withUser) return;
+
+        try {
+            const messages = await Message.find({ 
+                $or: [
+                    { fromUsername: currentUser, toUsername: withUser },
+                    { fromUsername: withUser, toUsername: currentUser }
+                ]
+            }).sort({ timestamp: 1 });
+            socket.emit("loadConversation", messages);
+        } catch (err) {
+            console.error("Error loading conversation:", err);
+        }
+    });
+
     socket.on("privateMessage", async ({ toUsername, fromUsername, message }) => {
-        await Message.create({ fromUsername, toUsername, message });
+        await Message.create({ 
+            fromUsername, 
+            toUsername, 
+            message,
+            timestamp: new Date().toISOString()
+         });
 
         const recipientSocketId = Object.keys(onlineUsers).find(
             key => onlineUsers[key] === toUsername
