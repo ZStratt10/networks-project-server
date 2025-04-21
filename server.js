@@ -1,4 +1,4 @@
-Srequire("dotenv").config(); // Load environment variables
+require("dotenv").config(); // Load environment variables
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
