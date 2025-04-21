@@ -15,8 +15,26 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        //generate a randome public key (placeholder for now)
-        const dummyPublicKey = btoa("publicKeyPlaceholder");
+        const keyPair = await window.crypto.subtle.generateKey(
+            {
+                name: "RSA-OAEP",
+                modulusLength: 2048,
+                publicExponent: new Uint8Array([1, 0, 1]),
+                hash: "SHA-256"
+            },
+            true,
+            ["encrypt", "decrypt"]
+        );
+
+        // Export public key to send to server
+        const exportedPublicKey = await window.crypto.subtle.exportKey("spki", keyPair.public);
+        const publicKeyBase64 = btoa(String.fromCharCode(...new Uint8Array(exportedPublicKey)));
+
+        // Export private key and store securely in localStorage (encrypted ideally, but local for now)
+        const exportedPrivateKey = await window.crypto.subtle.exportKey("pkcs8", keyPair.private);
+        const privateKeyBase64 = btoa(String.fromCharCode(...new Uint8Array(exportedPrivateKey)));
+
+        localStorage.setItem("privateKey", privateKeyBase64);
 
         try {
             const response = await fetch("https://networks-project-server.onrender.com/signup", {
