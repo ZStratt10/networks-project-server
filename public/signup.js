@@ -27,8 +27,8 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
             console.log("Exporting public and private keys...");
-            const exportedPublicKey = await window.crypto.subtle.exportKey("spki", keyPair.public);
-            const exportedPrivateKey = await window.crypto.subtle.exportKey("pkcs8", keyPair.private);
+            const exportedPublicKey = await window.crypto.subtle.exportKey("spki", keyPair.publicKey);
+            const exportedPrivateKey = await window.crypto.subtle.exportKey("pkcs8", keyPair.privateKey);
 
             const publicKeyBase64 = btoa(String.fromCharCode(...new Uint8Array(exportedPublicKey)));
             const privateKeyBase64 = btoa(String.fromCharCode(...new Uint8Array(exportedPrivateKey)));
