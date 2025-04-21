@@ -1,4 +1,4 @@
-require("dotenv").config(); // Load environment variables
+Srequire("dotenv").config(); // Load environment variables
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
@@ -88,6 +88,16 @@ app.post("/login", async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 });
+
+app.get("/publicKey/:username", async (req, res) => {
+    const user = await User.findOne({ username: req.params.username });
+    if (user) {
+        res.json({ publicKey: user.public_key });
+    } else {
+        res.status(404).json({ message: "User not found" });
+    }
+});
+
 
 let onlineUsers = {};
 
