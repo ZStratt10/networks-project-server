@@ -26,6 +26,15 @@ async function decryptMessage(encryptedBase64, privateKey) {
     return new TextDecoder().decode(decrypted);
 }
 
+function base64ToArrayBuffer(base64) {
+    const binaryString = atob(base64);
+    const length = binaryString.length;
+    const bytes = new Uint8Array(length);
+    for (let i =0; i < length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes.buffer;
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     (async () => {
@@ -41,7 +50,19 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!username) window.location.href = "login.html";
 
         let publicKeys = {};
-        const privateKey = await importPrivateKey(localStorage.getItem("privateKey"));
+        const privateKeyBase64 = localStorage.getItem('privateKey');
+        const privateKeyBuffer = base64ToArrayBuffer(privateKeyBase64);
+
+        const privateKey = await crypto.subtle.importKey(
+            'pkcs8',
+            privateKeyBuffer,
+            {
+                name: 'RSA-OAEP',
+                hash: 'SHA-256'
+            },
+            true,
+            ['decrypt']
+        );
 
         const socket = io();
         socket.emit("join", username);
