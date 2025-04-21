@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         } catch (error) {
             console.error("Signup error:", error);
-            alert("Could not connect o server.");
+            alert("Could not connect to server.");
         }
     });
 });
