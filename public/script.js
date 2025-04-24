@@ -50,19 +50,34 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!username) window.location.href = "login.html";
 
         let publicKeys = {};
+        
         const privateKeyBase64 = localStorage.getItem('privateKey');
-        const privateKeyBuffer = base64ToArrayBuffer(privateKeyBase64);
+        if (!privateKeyBase64) {
+            alert("There was an issue fetching your account information. Please try signing up again.");
+            window.location.href = "signup.html";
+            return;
+        }
 
-        const privateKey = await crypto.subtle.importKey(
-            'pkcs8',
-            privateKeyBuffer,
-            {
-                name: 'RSA-OAEP',
-                hash: 'SHA-256'
-            },
-            true,
-            ['decrypt']
-        );
+        let privateKey;
+        try {
+            const privateKeyBuffer = base64ToArrayBuffer(privateKeyBase64);
+            privateKey = await crypto.subtle.importKey(
+                'pkcs8',
+                privateKeyBuffer,
+                {
+                    name: 'RSA-OAEP',
+                    hash: 'SHA-256'
+                },
+                true,
+                ['decrypt']
+            );
+        } catch (err) {
+            console.error("Private key import failed:", err);
+            alert("There was an issue fetching your account information. Please try signing up again.");
+            localStorage.removeItem("privateKey");
+            window.location.href = "signup.html";
+            return;
+        }
 
         const socket = io();
         socket.emit("join", username);
