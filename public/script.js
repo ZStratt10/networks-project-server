@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         logoutButton.addEventListener("click", () => {
             localStorage.removeItem("username");
-            localStorage.removeItem("privateKey");
+            localStorage.removeItem("publicKey");
             window.location.href = "login.html";
         });
 
