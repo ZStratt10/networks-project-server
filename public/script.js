@@ -86,10 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
         users.forEach(user => {
             if (user !== username) {
                 const userItem = document.createElement("li");
-                userItem.innerHTML = user;
-                if (user === currentRecipient) {
-                    userItem.innerHTML += ' <span class="lock-icon" title="Encrypted Chat">🔒</span>';
-                }
+                userItem.textContent = user;
                 userItem.addEventListener("click", () => {
                     currentRecipient = user;
                     clearMessages();
