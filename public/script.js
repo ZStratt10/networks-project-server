@@ -50,7 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!username) window.location.href = "login.html";
 
         let publicKeys = {};
-        
         const privateKeyBase64 = localStorage.getItem('privateKey');
         if (!privateKeyBase64) {
             alert("There was an issue fetching your account information. Please try signing up again.");
@@ -87,7 +86,10 @@ document.addEventListener("DOMContentLoaded", () => {
         users.forEach(user => {
             if (user !== username) {
                 const userItem = document.createElement("li");
-                userItem.textContent = user;
+                userItem.innerHTML = user;
+                if (user === currentRecipient) {
+                    userItem.innerHTML += ' <span class="lock-icon" title="Encrypted Chat">🔒</span>';
+                }
                 userItem.addEventListener("click", () => {
                     currentRecipient = user;
                     clearMessages();
@@ -117,13 +119,9 @@ document.addEventListener("DOMContentLoaded", () => {
         socket.on("loadConversation", async (messages) => {
             clearMessages();
             for (const { fromUsername, message } of messages) {
-                try {
-                    const decrypted = await decryptMessage(message, privateKey);
-                    addMessage(fromUsername, decrypted);
-                } catch (err) {
-                    console.error("Decryption error:", err);
+                const decrypted = await decryptMessage(message, privateKey);
+                addMessage(fromUsername, decrypted);
                 }
-            }
         });
 
         sendButton.addEventListener("click", async () => {
